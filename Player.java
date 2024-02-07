@@ -3,7 +3,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Random;
+//import java.util.Random;
 
 public class Player {
 	static BufferedWriter fileOut = null;
@@ -36,7 +36,7 @@ public class Player {
 	public static void main(String[] args) throws Exception {
 
 		try {
-			Random rand = new Random(); // source of random for random moves
+			//Random rand = new Random(); // source of random for random moves
 
 			/*
 				**************
@@ -62,7 +62,7 @@ public class Player {
 					*********************************
 					- current plan: attack randomly
 				*/
-
+				int targetArrLength = neutralPlanets.length+4;
 				String[] myPlanets = new String[0];
 				String targetPlayer = "";
 				String[] myWholePlanets = new String[0];
@@ -74,61 +74,77 @@ public class Player {
 				if (myColor.equals("blue")) {
 					myPlanets = bluePlanets;
 					myWholePlanets= bluePlanets2;
-					String[] potentialTargets = { "green", "yellow", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					targetPlayer = "green yellow neutral";
+					targetArrLength = greenPlanets.length + yellowPlanets.length + neutralPlanets.length;		
 				} 
 
 				if (myColor.equals("cyan")) {
 					myPlanets = cyanPlanets;
 					myWholePlanets= cyanPlanets2;
-					String[] potentialTargets = {"green", "yellow", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					targetPlayer = "green yellow neutral";
+					targetArrLength = greenPlanets.length + yellowPlanets.length + neutralPlanets.length;
 				} 
 
 				if (myColor.equals("green")) {
 					myPlanets = greenPlanets;
 					myWholePlanets= greenPlanets2;
-					String[] potentialTargets = {"cyan", "blue", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					targetPlayer = "cyan blue neutral";
+					targetArrLength = cyanPlanets.length + bluePlanets.length + neutralPlanets.length;
 				} 
 				
 				if (myColor.equals("yellow")) {
 					myPlanets = yellowPlanets;
 					myWholePlanets= yellowPlanets2;
-					String[] potentialTargets = {"cyan", "blue", "neutral"};
-					targetPlayer = potentialTargets[rand.nextInt(3)];
+					targetPlayer = "cyan blue neutral";
+					targetArrLength = cyanPlanets.length + bluePlanets.length + neutralPlanets.length;
 				}
 
 				/*
 					- based on the color selected as the target,
 					find the planets of the targeted player
 				*/
-				String[] targetPlayerPlanets = new String[0];
-				String[] targetWholePlanets = new String[0];
-				if (targetPlayer.equals("blue")) {
-					targetPlayerPlanets = bluePlanets;
-					targetWholePlanets= bluePlanets2;
+				//String[] targetPlayerPlanets = new String[0];
+				String[] targetWholePlanets = new String[targetArrLength];
+				String[] targetPlayerPlanets = new String[targetArrLength];
+				logToFile("bluePlanets.length:"+bluePlanets.length);
+				logToFile("cyanPlanets.length:"+cyanPlanets.length);
+				logToFile("greenPlanets.length:"+greenPlanets.length);
+				logToFile("yellowPlanets.length:"+yellowPlanets.length);
+				
+				if (targetPlayer.equals("cyan blue neutral")) {
+					arrayCopy(bluePlanets, 0, targetPlayerPlanets, 0, bluePlanets.length);
+					arrayCopy(cyanPlanets, 0, targetPlayerPlanets, bluePlanets.length, cyanPlanets.length);
+					arrayCopy(neutralPlanets, 0, targetPlayerPlanets, bluePlanets.length+cyanPlanets.length, neutralPlanets.length);
+
+					arrayCopy(bluePlanets2, 0, targetWholePlanets, 0, bluePlanets.length);
+					arrayCopy(cyanPlanets2, 0, targetWholePlanets, bluePlanets.length, cyanPlanets.length);
+					arrayCopy(neutralPlanets2, 0, targetWholePlanets, bluePlanets.length+cyanPlanets.length, neutralPlanets.length);
 				}
 
-				if (targetPlayer.equals("cyan")) {
-					targetPlayerPlanets = cyanPlanets;
-					targetWholePlanets= cyanPlanets2;
+				if (targetPlayer.equals("green yellow neutral")) {
+					arrayCopy(greenPlanets, 0, targetPlayerPlanets, 0, greenPlanets.length);
+					arrayCopy(yellowPlanets, 0, targetPlayerPlanets, greenPlanets.length, yellowPlanets.length);
+					arrayCopy(neutralPlanets, 0, targetPlayerPlanets, greenPlanets.length+yellowPlanets.length, neutralPlanets.length);
+
+					arrayCopy(greenPlanets2, 0, targetWholePlanets, 0, greenPlanets.length);
+					arrayCopy(yellowPlanets2, 0, targetWholePlanets, greenPlanets.length, yellowPlanets.length);
+					arrayCopy(neutralPlanets2, 0, targetWholePlanets, greenPlanets.length+yellowPlanets.length, neutralPlanets.length);
 				}
 
-				if (targetPlayer.equals("green")) {
-					targetPlayerPlanets = greenPlanets;
-					targetWholePlanets= greenPlanets2;
-				}
+				// if (targetPlayer.equals("green")) {
+				// 	targetPlayerPlanets = greenPlanets;
+				// 	targetWholePlanets= greenPlanets2;
+				// }
 
-				if (targetPlayer.equals("yellow")) {
-					targetPlayerPlanets = yellowPlanets;
-					targetWholePlanets= yellowPlanets2;
-				}
+				// if (targetPlayer.equals("yellow")) {
+				// 	targetPlayerPlanets = yellowPlanets;
+				// 	targetWholePlanets= yellowPlanets2;
+				// }
 
-				if (targetPlayer.equals("neutral")) {
-					targetPlayerPlanets = neutralPlanets;
-					targetWholePlanets= neutralPlanets2;
-				}
+				// if (targetPlayer.equals("neutral")) {
+				// 	targetPlayerPlanets = neutralPlanets;
+				// 	targetWholePlanets= neutralPlanets2;
+				// }
 				/*
 					- if the target player has any planets
 					and if i have any planets (we could only have 
@@ -144,14 +160,14 @@ public class Player {
 						 String myPlanetParsing= myWholePlanets[i];
 						 String target="";
 						 double minDistance = 1000000000;
-						 int myX=Integer.parseInt(myPlanetParsing.split(" ")[1]);
-						int myY=Integer.parseInt(myPlanetParsing.split(" ")[2]);
+						 double myX=Double.parseDouble(myPlanetParsing.split(" ")[1]);
+						double myY=Double.parseDouble(myPlanetParsing.split(" ")[2]);
 						for (int j = 0 ; j < targetPlayerPlanets.length ; j++) {
 							logToFile("inner for");
 							logToFile("target planets[j]"+targetWholePlanets[j]);
 							 String targetParsing= targetWholePlanets[j];
-							 int targetX=Integer.parseInt(targetParsing.split(" ")[1]);
-							 int targetY=Integer.parseInt(targetParsing.split(" ")[2]);
+							 double targetX=Double.parseDouble(targetParsing.split(" ")[1]);
+							 double targetY=Double.parseDouble(targetParsing.split(" ")[2]);
 							 if(calculateDistance(myX, myY, targetX, targetY) < minDistance){
 							 	minDistance = calculateDistance(myX, myY, targetX, targetY);
 							 	target = targetPlayerPlanets[j];
@@ -333,8 +349,13 @@ public class Player {
 		yellowPlanets2 = yellowPlanetsList2.toArray(new String[0]);
 		neutralPlanets2 = neutralPlanetsList2.toArray(new String[0]);
 	}
-	public static double calculateDistance(int x1, int y1, int x2, int y2) {
+	public static double calculateDistance(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+	public static void arrayCopy(String[] source, int sourceStart, String[] destination, int destStart, int length) {
+        for (int i = 0; i < length; i++) {
+            destination[destStart + i] = source[sourceStart + i];
+        }
     }
 
 }
