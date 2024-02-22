@@ -160,14 +160,14 @@ public class Player {
 						 String myPlanetParsing= myWholePlanets[i];
 						 String target="";
 						 double minDistance = 1000000000;
-						 double myX=Double.parseDouble(myPlanetParsing.split(" ")[1]);
-						double myY=Double.parseDouble(myPlanetParsing.split(" ")[2]);
+						 double myX=Double.parseDouble(myPlanetParsing.split(" ")[2]);
+						double myY=Double.parseDouble(myPlanetParsing.split(" ")[3]);
 						for (int j = 0 ; j < targetPlayerPlanets.length ; j++) {
 							logToFile("inner for");
 							logToFile("target planets[j]"+targetWholePlanets[j]);
 							 String targetParsing= targetWholePlanets[j];
-							 double targetX=Double.parseDouble(targetParsing.split(" ")[1]);
-							 double targetY=Double.parseDouble(targetParsing.split(" ")[2]);
+							 double targetX=Double.parseDouble(targetParsing.split(" ")[2]);
+							 double targetY=Double.parseDouble(targetParsing.split(" ")[3]);
 							 if(calculateDistance(myX, myY, targetX, targetY) < minDistance){
 							 	minDistance = calculateDistance(myX, myY, targetX, targetY);
 							 	target = targetPlayerPlanets[j];
