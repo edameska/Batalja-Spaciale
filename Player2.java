@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
-//import java.util.Random;
 
 public class Player {
 	static BufferedWriter fileOut = null;
@@ -36,8 +35,6 @@ public class Player {
 	public static void main(String[] args) throws Exception {
 
 		try {
-			//Random rand = new Random(); // source of random for random moves
-
 			/*
 				**************
 				Main game loop
@@ -103,7 +100,6 @@ public class Player {
 					- based on the color selected as the target,
 					find the planets of the targeted player
 				*/
-				//String[] targetPlayerPlanets = new String[0];
 				String[] targetWholePlanets = new String[targetArrLength];
 				String[] targetPlayerPlanets = new String[targetArrLength];
 				logToFile("bluePlanets.length:"+bluePlanets.length);
