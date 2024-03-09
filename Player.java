@@ -1,4 +1,4 @@
-//code coresponds to the bor "CorrectestDistance"
+//code coresponds to the bot "CorrectestDistance"
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
