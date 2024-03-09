@@ -1,3 +1,4 @@
+//code coresponds to the bor "CorrectestDistance"
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -35,39 +36,19 @@ public class Player {
 	public static void main(String[] args) throws Exception {
 
 		try {
-			/*
-				**************
-				Main game loop
-				**************
-			  	- each iteration of the loop is one turn.
-			  	- this will loop until we stop playing the game
-			  	- we will be stopped if we die/win or if we crash
-			*/
+			
 			while (true) {
-				/*
-					- at the start of turn we first recieve data
-					about the universe from the game.
-					- data will be loaded into the static variables of
-					this class
-				*/
+				
 				getGameState();
 
-				/*
-				 	*********************************
-					LOGIC: figure out what to do with
-					your turn
-					*********************************
-					- current plan: attack randomly
-				*/
+				// GAME LOGIC:
+				// number of planets at start is number of neutral planets + the 4  players
 				int targetArrLength = neutralPlanets.length+4;
 				String[] myPlanets = new String[0];
 				String targetPlayer = "";
 				String[] myWholePlanets = new String[0];
 
-				/*
-					- get my planets based on my color
-					- select a random other color as the target player 
-				*/
+				// which color is mine and which colors should we attack: 
 				if (myColor.equals("blue")) {
 					myPlanets = bluePlanets;
 					myWholePlanets= bluePlanets2;
@@ -96,44 +77,45 @@ public class Player {
 					targetArrLength = cyanPlanets.length + bluePlanets.length + neutralPlanets.length;
 				}
 
-				/*
-					- based on the color selected as the target,
-					find the planets of the targeted player
-				*/
+				
 				String[] targetWholePlanets = new String[targetArrLength];
 				String[] targetPlayerPlanets = new String[targetArrLength];
+				// checking the lenghts of the planets as we encountered some issues with it
 				logToFile("bluePlanets.length:"+bluePlanets.length);
 				logToFile("cyanPlanets.length:"+cyanPlanets.length);
 				logToFile("greenPlanets.length:"+greenPlanets.length);
 				logToFile("yellowPlanets.length:"+yellowPlanets.length);
 				
+				//filling up the target players array:
 				if (targetPlayer.equals("cyan blue neutral")) {
+					//the names of the planets
 					arrayCopy(bluePlanets, 0, targetPlayerPlanets, 0, bluePlanets.length);
 					arrayCopy(cyanPlanets, 0, targetPlayerPlanets, bluePlanets.length, cyanPlanets.length);
 					arrayCopy(neutralPlanets, 0, targetPlayerPlanets, bluePlanets.length+cyanPlanets.length, neutralPlanets.length);
 
+					//the planets with the whole data
 					arrayCopy(bluePlanets2, 0, targetWholePlanets, 0, bluePlanets.length);
 					arrayCopy(cyanPlanets2, 0, targetWholePlanets, bluePlanets.length, cyanPlanets.length);
 					arrayCopy(neutralPlanets2, 0, targetWholePlanets, bluePlanets.length+cyanPlanets.length, neutralPlanets.length);
 				}
 
 				if (targetPlayer.equals("green yellow neutral")) {
+					//the names of the planets
 					arrayCopy(greenPlanets, 0, targetPlayerPlanets, 0, greenPlanets.length);
 					arrayCopy(yellowPlanets, 0, targetPlayerPlanets, greenPlanets.length, yellowPlanets.length);
 					arrayCopy(neutralPlanets, 0, targetPlayerPlanets, greenPlanets.length+yellowPlanets.length, neutralPlanets.length);
 
+					//the planets with the whole data					
 					arrayCopy(greenPlanets2, 0, targetWholePlanets, 0, greenPlanets.length);
 					arrayCopy(yellowPlanets2, 0, targetWholePlanets, greenPlanets.length, yellowPlanets.length);
 					arrayCopy(neutralPlanets2, 0, targetWholePlanets, greenPlanets.length+yellowPlanets.length, neutralPlanets.length);
 				}
-				/*
-					- if the target player has any planets
-					and if i have any planets (we could only have 
-					fleets) attack a random planet of the target 
-					from each of my planets
-				*/
+				
 				if (targetPlayerPlanets.length > 0 && myPlanets.length > 0) {
+					//checking wheter the code is compiling correctly
 					logToFile("if");
+
+					//for loop to go through my planets
 					for (int i = 0 ; i < myPlanets.length ; i++) {
 						logToFile("outer for");
 						logToFile("myPlanets[i]: " + myWholePlanets[i]);
@@ -141,14 +123,17 @@ public class Player {
 						 String myPlanetParsing= myWholePlanets[i];
 						 String target="";
 						 double minDistance = 1000000000;
+						//getting the coordinates of my planet
 						 double myX=Double.parseDouble(myPlanetParsing.split(" ")[2]);
-						double myY=Double.parseDouble(myPlanetParsing.split(" ")[3]);
+						 double myY=Double.parseDouble(myPlanetParsing.split(" ")[3]);
 						for (int j = 0 ; j < targetPlayerPlanets.length ; j++) {
 							logToFile("inner for");
 							logToFile("target planets[j]"+targetWholePlanets[j]);
 							 String targetParsing= targetWholePlanets[j];
+							//getting coordinates of target planet
 							 double targetX=Double.parseDouble(targetParsing.split(" ")[2]);
 							 double targetY=Double.parseDouble(targetParsing.split(" ")[3]);
+							//finding the planet closest to my planet using Eucledian distance
 							 if(calculateDistance(myX, myY, targetX, targetY) < minDistance){
 							 	minDistance = calculateDistance(myX, myY, targetX, targetY);
 							 	target = targetPlayerPlanets[j];
@@ -160,17 +145,9 @@ public class Player {
 					}
 				}
 				
-				/*
-					- send a hello message to your teammate bot :)
-					- it will recieve it form the game next turn (if the bot parses it)
-				 */
 				System.out.println("M Hello");
 
-				/*
-				  	- E will end my turn. 
-				  	- you should end each turn (if you don't the game will think you timed-out)
-				  	- after E you should send no more commands to the game
-				 */
+				//end of turn
 				System.out.println("E");
 			}
 		} catch (Exception e) {
@@ -235,8 +212,9 @@ public class Player {
 		LinkedList<String> cyanFleetsList = new LinkedList<>();
 		LinkedList<String> greenFleetsList = new LinkedList<>();
 		LinkedList<String> yellowFleetsList = new LinkedList<>();
+		
+		//added linked lists in order to get the whole data from the planets
 		LinkedList<String> bluePlanetsList2 = new LinkedList<>();
-
 		LinkedList<String> cyanPlanetsList2 = new LinkedList<>();
 		LinkedList<String> greenPlanetsList2 = new LinkedList<>();
 		LinkedList<String> yellowPlanetsList2 = new LinkedList<>();
@@ -286,7 +264,7 @@ public class Player {
 			*/
 
 			
-
+			//inserting the whole planet data into the linked lists for further use
 			if (firstLetter == 'P') {
 				String plantetName = tokens[1];
 				if (tokens[6].equals("blue")) {
@@ -319,20 +297,25 @@ public class Player {
 		cyanPlanets = cyanPlanetsList.toArray(new String[0]);
 		greenPlanets = greenPlanetsList.toArray(new String[0]);
 		yellowPlanets = yellowPlanetsList.toArray(new String[0]);
+		
 		neutralPlanets = neutralPlanetsList.toArray(new String[0]);
 		blueFleets = blueFleetsList.toArray(new String[0]);
 		cyanFleets = cyanFleetsList.toArray(new String[0]);
 		greenFleets = greenFleetsList.toArray(new String[0]);
 		yellowFleets = yellowFleetsList.toArray(new String[0]);
+		
+		//converting the new linked lists to arrays
 		bluePlanets2 = bluePlanetsList2.toArray(new String[0]);
 		cyanPlanets2= cyanPlanetsList2.toArray(new String[0]);
 		greenPlanets2 = greenPlanetsList2.toArray(new String[0]);
 		yellowPlanets2 = yellowPlanetsList2.toArray(new String[0]);
 		neutralPlanets2 = neutralPlanetsList2.toArray(new String[0]);
 	}
+	//function for calculating the distance between planets
 	public static double calculateDistance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    }
+       		 return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    	}
+	//function for copying the data for the opposing planets into one array
 	public static void arrayCopy(String[] source, int sourceStart, String[] destination, int destStart, int length) {
         for (int i = 0; i < length; i++) {
             destination[destStart + i] = source[sourceStart + i];
