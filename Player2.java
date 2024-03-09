@@ -1,4 +1,4 @@
-//code coresponds to the bot "WaitOrDie
+//code coresponds to the bot "WaitOrDie"
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
