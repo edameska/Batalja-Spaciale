@@ -6,7 +6,7 @@
 
 ### What to Expect
 
-📏📍 **Eucledean Distance Strategy** also known as __Correctest Distance__ or Player.java in this repository, utilizes the Eucledean distance metric to attack enemies.<br>
+📏📍 **Eucledean Distance Strategy** also known as __Correctest Distance__ or Player.java in this repository, utilizes the Euclidean distance metric to attack enemies.<br>
 ⏳📐 **WaitOrDie Strategy** or Player2.java within this repository, entails waiting for the optimal conditions to attack enemy planets, while still attacking the closest enemy.<br>
 📍⏳  **WoundAndWait Strategy** or Player3.java, is a combination of the aforementioned strategies, however, in the beginning it attacks neutral planets using the Eucledean distance metric, 
 and then, when all planets are conquered by either team, it uses the __WaitOrDie__ strategy.
