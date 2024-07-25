@@ -36,6 +36,9 @@ public class Player {
 	public static String[] greenFleets;
 	public static String[] yellowFleets;
 
+    public static int prevMyPlanets = 1;
+    public static int currentMyPlanets=1;
+
     public static void main(String[] args) throws Exception {
         try {
             while (true) {
@@ -49,7 +52,7 @@ public class Player {
     
                 // Execute action
                 executeAction(action);
-
+                currentMyPlanets = myPlanets.length;
 				logToFile(action);
     
                 // Getting reward and next state
@@ -58,9 +61,13 @@ public class Player {
     
                 // Update Q-table with the received reward and next state
                 updateQTable(currentState, action, reward, nextState);
+
+                prevMyPlanets = currentMyPlanets;
     
                 // Decay exploration rate
                 EXPLORATION_RATE = Math.max(EXPLORATION_RATE * EXPLORATION_DECAY, MIN_EXPLORATION_RATE);
+
+                prevMyPlanets = myPlanets.length;
     
                 // End of turn
                 System.out.println("E");
@@ -213,8 +220,10 @@ public class Player {
         stateActions.put(action, newQValue);
     }
     public static double getReward(String action) {
-		//yet to implement
-        //default
-        return 0.1;
+		if(prevMyPlanets <= myPlanets.length) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }
