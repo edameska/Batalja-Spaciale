@@ -2,7 +2,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Random;
 
 public class Player {
     static BufferedWriter fileOut = null;
@@ -43,6 +47,7 @@ public class Player {
         try {
             while (true) {
                 getGameState();
+				if(myPlanets.length == 0 || enemyPlanets.length == 0) break;
 
                 // Determine the state
                 String currentState = generateState();
@@ -72,11 +77,13 @@ public class Player {
                 // End of turn
                 System.out.println("E");
             }
-        } catch (Exception e) {
-            logToFile("ERROR: ");
-            logToFile(e.getMessage());
-            e.printStackTrace();
-        }
+        } catch (IOException e) {
+			logToFile("IOException occurred: " + e.getMessage());
+			e.printStackTrace();
+		} catch (Exception e) {
+			logToFile("Unexpected error: " + e.getMessage());
+			e.printStackTrace();
+		}
         if (fileOut != null) {
             fileOut.close();
         }
@@ -93,77 +100,77 @@ public class Player {
         fileOut.write(line);
         fileOut.flush();
     }
-
-    public static void getGameState() throws NumberFormatException, IOException {
-        BufferedReader stdin = new BufferedReader(new java.io.InputStreamReader(System.in));
-
-        LinkedList<String> bluePlanetsList = new LinkedList<>();
-        LinkedList<String> cyanPlanetsList = new LinkedList<>();
-        LinkedList<String> greenPlanetsList = new LinkedList<>();
-        LinkedList<String> yellowPlanetsList = new LinkedList<>();
-        LinkedList<String> neutralPlanetsList = new LinkedList<>();
-
-        LinkedList<String> myPlanetsList = new LinkedList<>();
-        LinkedList<String> enemyPlanetsList = new LinkedList<>();
-
+	public static void getGameState() throws NumberFormatException, IOException {
+		BufferedReader stdin = new BufferedReader(new java.io.InputStreamReader(System.in));
+	
+		LinkedList<String> bluePlanetsList = new LinkedList<>();
+		LinkedList<String> cyanPlanetsList = new LinkedList<>();
+		LinkedList<String> greenPlanetsList = new LinkedList<>();
+		LinkedList<String> yellowPlanetsList = new LinkedList<>();
+		LinkedList<String> neutralPlanetsList = new LinkedList<>();
+	
+		LinkedList<String> myPlanetsList = new LinkedList<>();
+		LinkedList<String> enemyPlanetsList = new LinkedList<>();
+	
 		LinkedList<String> blueFleetsList = new LinkedList<>();
 		LinkedList<String> cyanFleetsList = new LinkedList<>();
 		LinkedList<String> greenFleetsList = new LinkedList<>();
 		LinkedList<String> yellowFleetsList = new LinkedList<>();
-
-        String line = "";
-        while (!(line = stdin.readLine()).equals("S")) {
-            logToFile(line);
-
-            String[] tokens = line.split(" ");
-            char firstLetter = line.charAt(0);
-            if (firstLetter == 'U') {
-                universeWidth = Integer.parseInt(tokens[1]);
-                universeHeight = Integer.parseInt(tokens[2]);
-                myColor = tokens[3];
-            } else if (firstLetter == 'P') {
-                String planetName = tokens[1];
-                String planetColor = tokens[6];
-                if (planetColor.equals(myColor)) {
-                    myPlanetsList.add(planetName);
-                } else {
-                    enemyPlanetsList.add(planetName);
-                }
-
-                switch (planetColor) {
-                    case "blue":
-                        bluePlanetsList.add(planetName);
-                        break;
-                    case "cyan":
-                        cyanPlanetsList.add(planetName);
-                        break;
-                    case "green":
-                        greenPlanetsList.add(planetName);
-                        break;
-                    case "yellow":
-                        yellowPlanetsList.add(planetName);
-                        break;
-                    case "null":
-                        neutralPlanetsList.add(planetName);
-                        break;
-                }
-            }
-        }
-
-        bluePlanets = bluePlanetsList.toArray(new String[0]);
-        cyanPlanets = cyanPlanetsList.toArray(new String[0]);
-        greenPlanets = greenPlanetsList.toArray(new String[0]);
-        yellowPlanets = yellowPlanetsList.toArray(new String[0]);
-        neutralPlanets = neutralPlanetsList.toArray(new String[0]);
-
-        myPlanets = myPlanetsList.toArray(new String[0]);
-        enemyPlanets = enemyPlanetsList.toArray(new String[0]);
-
-        blueFleets = blueFleetsList.toArray(new String[0]);
-        cyanFleets = cyanFleetsList.toArray(new String[0]);
-        greenFleets = greenFleetsList.toArray(new String[0]);
-        yellowFleets = yellowFleetsList.toArray(new String[0]);
-    }
+	
+		String line;
+		while ((line = stdin.readLine()) != null && !line.equals("S")) {
+			logToFile(line);
+	
+			String[] tokens = line.split(" ");
+			char firstLetter = line.charAt(0);
+			if (firstLetter == 'U') {
+				universeWidth = Integer.parseInt(tokens[1]);
+				universeHeight = Integer.parseInt(tokens[2]);
+				myColor = tokens[3];
+			} else if (firstLetter == 'P') {
+				String planetName = tokens[1];
+				String planetColor = tokens[6];
+				if (planetColor.equals(myColor)) {
+					myPlanetsList.add(planetName);
+				} else {
+					enemyPlanetsList.add(planetName);
+				}
+	
+				switch (planetColor) {
+					case "blue":
+						bluePlanetsList.add(planetName);
+						break;
+					case "cyan":
+						cyanPlanetsList.add(planetName);
+						break;
+					case "green":
+						greenPlanetsList.add(planetName);
+						break;
+					case "yellow":
+						yellowPlanetsList.add(planetName);
+						break;
+					case "null":
+						neutralPlanetsList.add(planetName);
+						break;
+				}
+			}
+		}
+	
+		bluePlanets = bluePlanetsList.toArray(new String[0]);
+		cyanPlanets = cyanPlanetsList.toArray(new String[0]);
+		greenPlanets = greenPlanetsList.toArray(new String[0]);
+		yellowPlanets = yellowPlanetsList.toArray(new String[0]);
+		neutralPlanets = neutralPlanetsList.toArray(new String[0]);
+	
+		myPlanets = myPlanetsList.toArray(new String[0]);
+		enemyPlanets = enemyPlanetsList.toArray(new String[0]);
+	
+		blueFleets = blueFleetsList.toArray(new String[0]);
+		cyanFleets = cyanFleetsList.toArray(new String[0]);
+		greenFleets = greenFleetsList.toArray(new String[0]);
+		yellowFleets = yellowFleetsList.toArray(new String[0]);
+	}
+	
 
     public static String generateState() {
         return Arrays.toString(bluePlanets) + Arrays.toString(cyanPlanets) +
@@ -186,21 +193,52 @@ public class Player {
         }
     }
 
-    public static String getRandomAction() {
+	public static String getRandomAction() {
+		// Check if either myPlanets or enemyPlanets array is empty
 		if (myPlanets.length == 0 || enemyPlanets.length == 0) {
-			//no valid action if either array is empty
-			return "";
+			// Log the issue for debugging purposes
+			try {
+				logToFile("No valid action: myPlanets or enemyPlanets array is empty.");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return ""; // No valid action if either array is empty
 		}
-
-        // Randomly choose an origin planet from the player's planets
-        String originPlanet = myPlanets[rand.nextInt(myPlanets.length)];
-        // Randomly choose a destination planet from the enemy's planets
-        String destinationPlanet = enemyPlanets[rand.nextInt(enemyPlanets.length)];
-        
-        // Send half troops for now
-        return "A " + originPlanet + " " + destinationPlanet;
-   
-    }
+	
+		// Safely pick a random origin planet from myPlanets
+		String originPlanet = null;
+		try {
+			if(myPlanets.length > 0) originPlanet = myPlanets[rand.nextInt(myPlanets.length)];
+			
+		} catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+			// Handle potential errors in picking a random planet
+			try {
+				logToFile("Error picking origin planet: " + e.getMessage());
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+			return ""; // Return empty if error occurs
+		}
+	
+		// Safely pick a random destination planet from enemyPlanets
+		String destinationPlanet = null;
+		try {
+			if(enemyPlanets.length > 0) destinationPlanet = enemyPlanets[rand.nextInt(enemyPlanets.length)];
+			
+		} catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+			// Handle potential errors in picking a random planet
+			try {
+				logToFile("Error picking destination planet: " + e.getMessage());
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+			return ""; // Return empty if error occurs
+		}
+	
+		// Return action in expected format
+		return "A " + originPlanet + " " + destinationPlanet;
+	}
+	
 
     public static void executeAction(String action) {
         // Print the action to be executed
@@ -219,11 +257,20 @@ public class Player {
         double newQValue = oldQValue + LEARNING_RATE * (reward + DISCOUNT_FACTOR * maxNextQValue - oldQValue);
         stateActions.put(action, newQValue);
     }
-    public static double getReward(String action) {
-		if(prevMyPlanets <= myPlanets.length) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
+
+	public static double getReward(String action) {
+		if (prevMyPlanets < myPlanets.length) {
+			return 1.0; // Gained planets
+		} else if (prevMyPlanets > myPlanets.length) {
+			return -1.0; // Lost planets
+		}
+		
+		// Give reward for attacking neutral planets if applicable
+		if (action.startsWith("A") && Arrays.asList(neutralPlanets).contains(action.split(" ")[2])) {
+			return 0.5; // Positive reward for attacking neutral planets
+		}
+	
+		return 0.0; // No change
+	}
+	
 }
