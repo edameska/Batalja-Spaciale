@@ -11,6 +11,20 @@
 📍⏳  **WoundAndWait Strategy** or Player3.java, is a combination of the aforementioned strategies, however, in the beginning it attacks neutral planets using the Eucledean distance metric, 
 and then, when all planets are conquered by either team, it uses the __WaitOrDie__ strategy.
 
+
+### Q-Learning Bot
+
+🚀 **Q-Learning Bot**: We decided to utilize the Q-Learning algorithm, a reinforcement learning approach. This bot continuously learns and refines its decision-making based on rewards from its actions. The Q-Learning Bot is located in the `Better-version` folder of this repository.
+
+#### Key Concepts:
+
+- **Q-table**: A Map that stores the expected utility (Q-value) of taking each action in each state.
+- **LEARNING_RATE**: Determines how much new information overrides the old.
+- **DISCOUNT_FACTOR**: Importance of future rewards.
+- **EXPLORATION_RATE**: How often to choose a random action (exploration).
+- **EXPLORATION_DECAY**: Rate at which exploration decreases over time.
+- **MIN_EXPLORATION_RATE**: Minimum value for the exploration rate.
+
 ### Galactic Visionaries
 ⭐[Elena Dameska](https://github.com/edameska)<br>
 🌟[Sofija Kochovska](https://github.com/sof42)
