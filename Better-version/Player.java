@@ -47,7 +47,10 @@ public class Player {
         try {
             while (true) {
                 getGameState();
-				if(myPlanets.length == 0 || enemyPlanets.length == 0) break;
+		if(myPlanets.length == 0 || enemyPlanets.length == 0){ 
+                    System.out.println("E");
+                    break;
+		}
 
                 // Determine the state
                 String currentState = generateState();
@@ -185,11 +188,19 @@ public class Player {
             return getRandomAction();
         } else {
             // exploit -> choose the best action
-            return stateActions.entrySet()
-                               .stream()
-                               .max(Map.Entry.comparingByValue())
-                               .map(Map.Entry::getKey)
-                               .orElse(getRandomAction());
+            String chosenAction = stateActions.entrySet()
+            .stream()
+            .max(Map.Entry.comparingByValue())
+            .map(Map.Entry::getKey)
+            .orElse(getRandomAction());
+
+            try {
+                logToFile("action: " + chosenAction);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return chosenAction;
         }
     }
 
@@ -259,16 +270,17 @@ public class Player {
     }
 
 	public static double getReward(String action) {
+        // Give reward for attacking neutral planets if applicable
+		if (action.startsWith("A") && Arrays.asList(neutralPlanets).contains(action.split(" ")[2])) {
+			return 0.5; // Positive reward for attacking neutral planets
+		}
 		if (prevMyPlanets < myPlanets.length) {
 			return 1.0; // Gained planets
 		} else if (prevMyPlanets > myPlanets.length) {
 			return -1.0; // Lost planets
 		}
 		
-		// Give reward for attacking neutral planets if applicable
-		if (action.startsWith("A") && Arrays.asList(neutralPlanets).contains(action.split(" ")[2])) {
-			return 0.5; // Positive reward for attacking neutral planets
-		}
+		
 	
 		return 0.0; // No change
 	}
